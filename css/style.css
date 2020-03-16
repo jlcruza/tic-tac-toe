@@ -1,0 +1,45 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html, body {
+    height: 100%;
+    background-color: blue;
+}
+
+.center-block{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#title-bar{
+    height: 15vh;
+    padding: 15px;
+    background-color: limegreen;
+    color: white;
+}
+
+#game-area{
+    height: 70vh;
+}
+
+#container{
+    height: 50vh !important;
+    width: 50vh;
+    padding: 0 !important;
+}
+
+.play-block{
+    height: 33.333333%;
+}
+
+.row{
+    margin: 0 !important;
+    width: 100%;
+}
+
+.col {
+    border: 1px solid black;
+}
