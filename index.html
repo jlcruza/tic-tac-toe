@@ -64,16 +64,15 @@
 
                 </div>
 
-                <a href="#" class="btn btn-primary">Button</a>
+                <!-- <a href="#" class="btn btn-primary">Button</a> -->
             </div>
         </div>
 
         <!-- Button trigger modal -->
-        <button type="button" class="btn btn-primary" data-toggle="modal"
+        <!-- <button type="button" class="btn btn-primary" data-toggle="modal"
             data-target="#exampleModalCenter">
             Launch demo modal
-        </button>
-
+        </button> -->
         <!-- Modal -->
         <div class="modal fade" id="exampleModalCenter" tabindex="-1"
             role="dialog" aria-labelledby="exampleModalCenterTitle"
@@ -81,21 +80,52 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalCenterTitle">Modal
-                            title</h5>
+                        <h5 class="modal-title" id="exampleModalCenterTitle">Welcome</h5>
                         <button type="button" class="close" data-dismiss="modal"
                             aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        ...
+
+                        <!-- Player 1 -->
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">
+                                    <input id="P1CheckBox" type="checkbox" aria-label="Checkbox
+                                        for following text input">
+                                </div>
+                                <span class="input-group-text">Player 1</span>
+                            </div>
+                            <input id="P1Name" type="text" class="form-control"
+                                aria-label="Text input with checkbox"
+                                placeholder="Write Player 1's name here">
+                        </div>
+
+                        <!-- Player 2 -->
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">
+                                    <input id="P2CheckBox" type="checkbox" aria-label="Checkbox
+                                        for following text input">
+                                </div>
+                                <span class="input-group-text">Player 2</span>
+                            </div>
+                            <input id="P2Name" type="text" class="form-control"
+                                aria-label="Text input with checkbox"
+                                placeholder="Write Player 2's name here">
+                        </div>
+
+                        <!-- Note -->
+                        <div class="alert alert-warning" role="alert">
+                            Check ON for Human Players
+                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary"
                             data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save
-                            changes</button>
+                        <button id="PlayButton" type="button" class="btn btn-primary">START</button>
                     </div>
                 </div>
             </div>
@@ -103,8 +133,6 @@
 
     </body>
 </html>
-
-<script src="./js/script.js"></script>
 
 <!-- Bootstrap -->
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
@@ -118,3 +146,6 @@
     src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
     integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
     crossorigin="anonymous"></script>
+
+<!-- Embedded -->
+<script src="./js/script.js"></script>
