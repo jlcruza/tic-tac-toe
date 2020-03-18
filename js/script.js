@@ -77,14 +77,14 @@ const CoreLogic = (function () {
         document.getElementById("now-playing").innerText = "Player Turn: " + _activePlayer.name;
         hideModal();
 
-        if(_activePlayer.isCPU){
+        if (_activePlayer.isCPU) {
             moveCPU();
         }
     }
 
     switchTurn = () => {
 
-        if(_activePlayer == undefined) return;
+        if (_activePlayer == undefined) return;
 
         if (_activePlayer.mark == "X") {
             _activePlayer = _player2;
@@ -92,7 +92,7 @@ const CoreLogic = (function () {
             _activePlayer = _player1;
         }
 
-        if(_activePlayer.isCPU){
+        if (_activePlayer.isCPU) {
             moveCPU();
         }
 
@@ -101,9 +101,9 @@ const CoreLogic = (function () {
 
     repeatTurn = () => {
 
-        if(_activePlayer == undefined) return;
+        if (_activePlayer == undefined) return;
 
-        if(_activePlayer.isCPU){
+        if (_activePlayer.isCPU) {
             moveCPU();
         }
     }
@@ -118,10 +118,14 @@ const CoreLogic = (function () {
         if (div.target.innerText == "") {
             div.target.innerText = _activePlayer.mark;
             div.target.classList.add((div.target.innerText == "X") ? "x-mark" : "o-mark");
+            if(isWon()){
+                //End Game
+                return;
+            } 
             switchTurn();
             return true;
         }
-        
+
         console.log("Already selected!");
         repeatTurn()
         return false;
@@ -136,16 +140,16 @@ const CoreLogic = (function () {
 
     moveCPU = function () {
 
-        if (_activePlayer == undefined) return;
+        if (_activePlayer == undefined || isFull() || _isOver) return;
 
         const index = Math.ceil(Math.random() * 9) - 1;
-        console.log(_activePlayer.name +" choice: ", index + 1)
-        if(_blocks[index].innerText == ""){
+        console.log(_activePlayer.name + " choice: ", index + 1)
+        if (_blocks[index].innerText == "") {
             _blocks[index].click();
-        } else{
+        } else {
             moveCPU();
         }
-        
+
     };
 
     isFull = () => {
@@ -159,7 +163,82 @@ const CoreLogic = (function () {
     };
 
     isWon = () => {
-        return false;
+
+        if (_blocks[0].innerText == _blocks[1].innerText &&
+            _blocks[1].innerText == _blocks[2].innerText &&
+            _blocks[0].innerText != "") {
+            // 1 - First Row
+            _isOver = true;
+            _blocks[0].classList.add("victory-divs");
+            _blocks[1].classList.add("victory-divs");
+            _blocks[2].classList.add("victory-divs");
+
+        } if (_blocks[3].innerText == _blocks[4].innerText &&
+            _blocks[4].innerText == _blocks[5].innerText&&
+            _blocks[3].innerText != "") {
+            // 2 - Second Row
+            _isOver = true;
+            _blocks[3].classList.add("victory-divs");
+            _blocks[4].classList.add("victory-divs");
+            _blocks[5].classList.add("victory-divs");
+
+        } if (_blocks[6].innerText == _blocks[7].innerText &&
+            _blocks[7].innerText == _blocks[8].innerText&&
+            _blocks[6].innerText != "") {
+            // 3 - Third Row
+            _isOver = true;
+            _blocks[6].classList.add("victory-divs");
+            _blocks[7].classList.add("victory-divs");
+            _blocks[8].classList.add("victory-divs");
+
+        } if (_blocks[0].innerText == _blocks[3].innerText &&
+            _blocks[3].innerText == _blocks[6].innerText&&
+            _blocks[0].innerText != "") {
+            // 4 - First Column
+            _isOver = true;
+            _blocks[0].classList.add("victory-divs");
+            _blocks[3].classList.add("victory-divs");
+            _blocks[6].classList.add("victory-divs");
+
+        } if (_blocks[1].innerText == _blocks[4].innerText &&
+            _blocks[4].innerText == _blocks[7].innerText&&
+            _blocks[1].innerText != "") {
+            // 5 - Second Column
+            _isOver = true;
+            _blocks[1].classList.add("victory-divs");
+            _blocks[4].classList.add("victory-divs");
+            _blocks[7].classList.add("victory-divs");
+
+        } if (_blocks[2].innerText == _blocks[5].innerText &&
+            _blocks[5].innerText == _blocks[8].innerText&&
+            _blocks[2].innerText != "") {
+            // 6 - Third Column
+            _isOver = true;
+            _blocks[2].classList.add("victory-divs");
+            _blocks[5].classList.add("victory-divs");
+            _blocks[8].classList.add("victory-divs");
+
+        } if (_blocks[0].innerText == _blocks[4].innerText &&
+            _blocks[4].innerText == _blocks[8].innerText&&
+            _blocks[0].innerText != "") {
+            // 7 - Backslash [\]
+            _isOver = true;
+            _blocks[0].classList.add("victory-divs");
+            _blocks[4].classList.add("victory-divs");
+            _blocks[8].classList.add("victory-divs");
+
+        } if (_blocks[2].innerText == _blocks[4].innerText &&
+            _blocks[4].innerText == _blocks[6].innerText&&
+            _blocks[2].innerText != "") {
+            // 8 - Forward Slash [/]
+            _isOver = true;
+            _blocks[2].classList.add("victory-divs");
+            _blocks[4].classList.add("victory-divs");
+            _blocks[6].classList.add("victory-divs");
+
+        }
+
+        return _isOver;
     };
 
     window.onload = showModal();
