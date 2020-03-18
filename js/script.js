@@ -22,17 +22,28 @@ const CoreLogic = (function () {
     let _activePlayer = undefined;
     let _isOver = false;
 
+    // All function's names
+    let showModal;
+    let hideModal;
+    let readPlayers;
+    let switchTurn;
+    let repeatTurn;
+    let checkDiv;
+    let moveCPU;
+    let isFull;
+    let isWon;
+
     // 1 - Ask for Players
-    let showModal = () => {
+    showModal = () => {
         $('#exampleModalCenter').modal('show');
     }
 
-    let hideModal = () => {
+    hideModal = () => {
         $('#exampleModalCenter').modal('hide');
     }
 
     // 2 - Create Players
-    let readPlayers = () => {
+    readPlayers = () => {
 
         // Set Player 1
         if (document.getElementById('P1CheckBox').checked) {
@@ -65,25 +76,44 @@ const CoreLogic = (function () {
         _activePlayer = _player1;
         document.getElementById("now-playing").innerText = "Player Turn: " + _activePlayer.name;
         hideModal();
+
+        if(_activePlayer.isCPU){
+            moveCPU();
+        }
     }
 
-    let switchTurn = () => {
+    switchTurn = () => {
+
+        if(_activePlayer == undefined) return;
+
         if (_activePlayer.mark == "X") {
             _activePlayer = _player2;
         } else {
             _activePlayer = _player1;
         }
 
-        console.log("Active player: ", _activePlayer);
+        if(_activePlayer.isCPU){
+            moveCPU();
+        }
+
         document.getElementById("now-playing").innerText = "Player Turn: " + _activePlayer.name;
     }
 
-    let checkDiv = (div) => {
+    repeatTurn = () => {
 
-        console.log("checkDiv is running");
-        if (div == undefined || _activePlayer == undefined) return;
+        if(_activePlayer == undefined) return;
 
-        console.log("Selected DIV: ", div);
+        if(_activePlayer.isCPU){
+            moveCPU();
+        }
+    }
+
+    checkDiv = (div) => {
+
+        console.log("Called by: ", _activePlayer.name)
+        if (_activePlayer == undefined) return;
+
+        console.log(_activePlayer.name + " selected DIV content:", div.target.innerText);
 
         if (div.target.innerText == "") {
             div.target.innerText = _activePlayer.mark;
@@ -91,6 +121,9 @@ const CoreLogic = (function () {
             switchTurn();
             return true;
         }
+        
+        console.log("Already selected!");
+        repeatTurn()
         return false;
     };
 
@@ -99,28 +132,23 @@ const CoreLogic = (function () {
     for (let i = 0; i < _blocks.length; i++) {
         _blocks[i].classList.add("white-text");
         _blocks[i].addEventListener("click", checkDiv);
-        console.log("Added event to: ", _blocks[i]);
     }
 
-    let getBlocks = () => {
-        return _blocks;
-    }
-
-    let moveCPU = function () {
+    moveCPU = function () {
 
         if (_activePlayer == undefined) return;
 
-        console.log("CPU moving: ", _activePlayer)
-        const index = Math.round(Math.random() * 9);
-        _blocks[index].click();
+        const index = Math.ceil(Math.random() * 9) - 1;
+        console.log(_activePlayer.name +" choice: ", index + 1)
+        if(_blocks[index].innerText == ""){
+            _blocks[index].click();
+        } else{
+            moveCPU();
+        }
+        
     };
 
-
-    let getActivePlayer = () => {
-        return _activePlayer;
-    }
-
-    let isFull = () => {
+    isFull = () => {
         for (let i = 0; i < _blocks.length; i++) {
             if (_blocks[i].innerText == "") {
                 return false;
@@ -130,40 +158,15 @@ const CoreLogic = (function () {
         return true;
     };
 
-    let isWon = () => {
+    isWon = () => {
         return false;
     };
 
+    window.onload = showModal();
 
-
-    return { showModal, readPlayers, switchTurn, checkDiv, getBlocks, getActivePlayer, moveCPU, isFull, isWon }
-
-})();
-
-
-const gameHandler = (function () {
-    core = CoreLogic;
-
-    // 1- Ask for Players
-    window.onload = core.showModal();
-
-
-    let startGame = () => {
-        core.readPlayers;
-
-        //TODO: Break checkDiv
-
-        if(core.getActivePlayer.isCPU){
-            core.moveCPU;
-        }
-    }
-
-    // 2- Register those players
     let _playBtn = document.getElementById('PlayButton');
-    _playBtn.addEventListener('click', startGame);
+    _playBtn.addEventListener('click', readPlayers);
 
-    
-
-
+    //return { showModal, readPlayers, switchTurn, checkDiv, getBlocks, getActivePlayer, moveCPU, isFull, isWon }
 
 })();
