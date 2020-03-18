@@ -14,7 +14,7 @@ const Gameboard = (function () {
 })();
 
 
-const CoreLogic = (function () {
+(function () {
 
     // Private function attributes
     let _player1 = undefined;
@@ -118,10 +118,13 @@ const CoreLogic = (function () {
         if (div.target.innerText == "") {
             div.target.innerText = _activePlayer.mark;
             div.target.classList.add((div.target.innerText == "X") ? "x-mark" : "o-mark");
-            if(isWon()){
+            if (isWon()) {
                 //End Game
                 return;
-            } 
+            } else if (isFull()) {
+                //End Game
+                return;
+            }
             switchTurn();
             return true;
         }
@@ -159,8 +162,14 @@ const CoreLogic = (function () {
             }
         }
         _isOver = true;
+        showVictoryModal("Tie. No more possible moves");
         return true;
     };
+
+    showVictoryModal = (msg) => {
+        document.getElementById("victory-modal").innerText = msg;
+        $('#exampleModalCenter2').modal('show');
+    }
 
     isWon = () => {
 
@@ -174,7 +183,7 @@ const CoreLogic = (function () {
             _blocks[2].classList.add("victory-divs");
 
         } if (_blocks[3].innerText == _blocks[4].innerText &&
-            _blocks[4].innerText == _blocks[5].innerText&&
+            _blocks[4].innerText == _blocks[5].innerText &&
             _blocks[3].innerText != "") {
             // 2 - Second Row
             _isOver = true;
@@ -183,7 +192,7 @@ const CoreLogic = (function () {
             _blocks[5].classList.add("victory-divs");
 
         } if (_blocks[6].innerText == _blocks[7].innerText &&
-            _blocks[7].innerText == _blocks[8].innerText&&
+            _blocks[7].innerText == _blocks[8].innerText &&
             _blocks[6].innerText != "") {
             // 3 - Third Row
             _isOver = true;
@@ -192,7 +201,7 @@ const CoreLogic = (function () {
             _blocks[8].classList.add("victory-divs");
 
         } if (_blocks[0].innerText == _blocks[3].innerText &&
-            _blocks[3].innerText == _blocks[6].innerText&&
+            _blocks[3].innerText == _blocks[6].innerText &&
             _blocks[0].innerText != "") {
             // 4 - First Column
             _isOver = true;
@@ -201,7 +210,7 @@ const CoreLogic = (function () {
             _blocks[6].classList.add("victory-divs");
 
         } if (_blocks[1].innerText == _blocks[4].innerText &&
-            _blocks[4].innerText == _blocks[7].innerText&&
+            _blocks[4].innerText == _blocks[7].innerText &&
             _blocks[1].innerText != "") {
             // 5 - Second Column
             _isOver = true;
@@ -210,7 +219,7 @@ const CoreLogic = (function () {
             _blocks[7].classList.add("victory-divs");
 
         } if (_blocks[2].innerText == _blocks[5].innerText &&
-            _blocks[5].innerText == _blocks[8].innerText&&
+            _blocks[5].innerText == _blocks[8].innerText &&
             _blocks[2].innerText != "") {
             // 6 - Third Column
             _isOver = true;
@@ -219,7 +228,7 @@ const CoreLogic = (function () {
             _blocks[8].classList.add("victory-divs");
 
         } if (_blocks[0].innerText == _blocks[4].innerText &&
-            _blocks[4].innerText == _blocks[8].innerText&&
+            _blocks[4].innerText == _blocks[8].innerText &&
             _blocks[0].innerText != "") {
             // 7 - Backslash [\]
             _isOver = true;
@@ -228,7 +237,7 @@ const CoreLogic = (function () {
             _blocks[8].classList.add("victory-divs");
 
         } if (_blocks[2].innerText == _blocks[4].innerText &&
-            _blocks[4].innerText == _blocks[6].innerText&&
+            _blocks[4].innerText == _blocks[6].innerText &&
             _blocks[2].innerText != "") {
             // 8 - Forward Slash [/]
             _isOver = true;
@@ -238,14 +247,34 @@ const CoreLogic = (function () {
 
         }
 
+        if (_isOver) {
+            showVictoryModal(_activePlayer.name + " has WON!");
+        }
+
         return _isOver;
     };
+
+    let resetGame = () => {
+
+        const classes = ["x-mark", "o-mark", "victory-divs"];
+
+        for (let i = 0; i < _blocks.length; i++) {
+            _blocks[i].classList.remove(classes[0]);
+            _blocks[i].classList.remove(classes[1]);
+            _blocks[i].classList.remove(classes[2]);
+            _blocks[i].innerText = "";
+        }
+
+        _isOver = false;
+        showModal();
+    }
 
     window.onload = showModal();
 
     let _playBtn = document.getElementById('PlayButton');
     _playBtn.addEventListener('click', readPlayers);
 
-    //return { showModal, readPlayers, switchTurn, checkDiv, getBlocks, getActivePlayer, moveCPU, isFull, isWon }
+    let _resetBtn = document.getElementById('resetButton');
+    _resetBtn.addEventListener('click', resetGame);
 
 })();
