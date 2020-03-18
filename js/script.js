@@ -1,14 +1,13 @@
-function Player(name, mark, isCPU, isActive) {
+function Player(name, mark, isCPU) {
     this.name = name;
     this.mark = mark;
     this.isCPU = isCPU;
-    this.isActive = isActive
-    return { name, mark, isCPU, isActive };
+    return { name, mark, isCPU };
 }
 
 const Gameboard = (function () {
 
-    const blocks = document.getElementsByClassName("play-block");
+    let blocks = document.getElementsByClassName("play-block");
 
     return blocks;
 
@@ -21,6 +20,7 @@ const CoreLogic = (function () {
     let _player1 = undefined;
     let _player2 = undefined;
     let _activePlayer = undefined;
+    let _isOver = false;
 
     // 1 - Ask for Players
     let showModal = () => {
@@ -36,77 +36,134 @@ const CoreLogic = (function () {
 
         // Set Player 1
         if (document.getElementById('P1CheckBox').checked) {
-            const name = document.getElementById('P1Name').value;
+            const name = (document.getElementById('P1Name').value != "") ? document.getElementById('P1Name').value : "Player1";
             const mark = "X";
             const isCPU = false;
-            const isActive = true;
-            _player1 = Player(name, mark, isCPU, isActive);
+            _player1 = Player(name, mark, isCPU);
         } else {
             const name = "CPU 1";
             const mark = "X";
             const isCPU = true;
-            const isActive = true;
-            _player1 = Player(name, mark, isCPU, isActive);
+            _player1 = Player(name, mark, isCPU);
         }
         console.log("Player 1 set: ", _player1);
 
         // Set Player 2
         if (document.getElementById('P2CheckBox').checked) {
-            const name = document.getElementById('P2Name').value;
+            const name = (document.getElementById('P1Name').value != "") ? document.getElementById('P1Name').value : "Player2";
             const mark = "O";
             const isCPU = false;
-            const isActive = false;
-            _player2 = Player(name, mark, isCPU, isActive);
+            _player2 = Player(name, mark, isCPU);
         } else {
             const name = "CPU 2";
             const mark = "O";
             const isCPU = true;
-            const isActive = false;
-            _player2 = Player(name, mark, isCPU, isActive);
+            _player2 = Player(name, mark, isCPU);
         }
         console.log("Player 2 set: ", _player2);
 
         _activePlayer = _player1;
+        document.getElementById("now-playing").innerText = "Player Turn: " + _activePlayer.name;
         hideModal();
     }
 
     let switchTurn = () => {
-        if(_activePlayer.mark == "X"){
+        if (_activePlayer.mark == "X") {
             _activePlayer = _player2;
         } else {
             _activePlayer = _player1;
         }
 
         console.log("Active player: ", _activePlayer);
+        document.getElementById("now-playing").innerText = "Player Turn: " + _activePlayer.name;
     }
 
     let checkDiv = (div) => {
-        console.log("Selected DIV: ", div)
-        if(div.target.innerText == ""){
+
+        console.log("checkDiv is running");
+        if (div == undefined || _activePlayer == undefined) return;
+
+        console.log("Selected DIV: ", div);
+
+        if (div.target.innerText == "") {
             div.target.innerText = _activePlayer.mark;
+            div.target.classList.add((div.target.innerText == "X") ? "x-mark" : "o-mark");
             switchTurn();
             return true;
-        } 
-        
+        }
         return false;
-    }
+    };
 
-    // Preparations 
-    let _playBtn = document.getElementById('PlayButton');
-    _playBtn.addEventListener('click', readPlayers);
-
-    
 
     let _blocks = Gameboard;
-    for(let i = 0; i<_blocks.length; i++){
-        _blocks[i].addEventListener('click', checkDiv)
+    for (let i = 0; i < _blocks.length; i++) {
+        _blocks[i].classList.add("white-text");
+        _blocks[i].addEventListener("click", checkDiv);
+        console.log("Added event to: ", _blocks[i]);
     }
 
-    // Return Public
-    return { showModal, hideModal };
+    let getBlocks = () => {
+        return _blocks;
+    }
+
+    let moveCPU = function () {
+
+        if (_activePlayer == undefined) return;
+
+        console.log("CPU moving: ", _activePlayer)
+        const index = Math.round(Math.random() * 9);
+        _blocks[index].click();
+    };
+
+
+    let getActivePlayer = () => {
+        return _activePlayer;
+    }
+
+    let isFull = () => {
+        for (let i = 0; i < _blocks.length; i++) {
+            if (_blocks[i].innerText == "") {
+                return false;
+            }
+        }
+        _isOver = true;
+        return true;
+    };
+
+    let isWon = () => {
+        return false;
+    };
+
+
+
+    return { showModal, readPlayers, switchTurn, checkDiv, getBlocks, getActivePlayer, moveCPU, isFull, isWon }
+
 })();
 
 
-// Game Main
-let play = CoreLogic;
-play.showModal();
+const gameHandler = (function () {
+    core = CoreLogic;
+
+    // 1- Ask for Players
+    window.onload = core.showModal();
+
+
+    let startGame = () => {
+        core.readPlayers;
+
+        //TODO: Break checkDiv
+
+        if(core.getActivePlayer.isCPU){
+            core.moveCPU;
+        }
+    }
+
+    // 2- Register those players
+    let _playBtn = document.getElementById('PlayButton');
+    _playBtn.addEventListener('click', startGame);
+
+    
+
+
+
+})();
